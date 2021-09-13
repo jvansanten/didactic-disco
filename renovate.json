@@ -10,13 +10,13 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
-      "rangeStrategy": "bump"
+      "automerge": true
     },
     {
       "matchDepTypes": ["dev-dependencies"],
       "automerge": true,
-      "groupName": "dev dependencies"
+      "groupName": "dev dependencies",
+      "rangeStrategy": "bump"
     },
     {
       "matchPackagePatterns": ["^ampel-.*"],
