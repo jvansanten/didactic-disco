@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "schedule": null,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automergeType": "branch"
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "rangeStrategy": "bump"
+    },
+    {
+      "matchDepTypes": ["dev-dependencies"],
+      "automerge": true,
+      "groupName": "dev dependencies"
+    },
+    {
+      "matchPackagePatterns": ["^ampel-.*"],
+      "schedule": null,
+      "automerge": true,
+      "automergeType": "branch",
+      "groupName": "ampel packages",
+      "rangeStrategy": "bump"
+    }
+  ]
+}
