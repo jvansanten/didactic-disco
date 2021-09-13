@@ -15,6 +15,7 @@
     {
       "matchDepTypes": ["dev-dependencies"],
       "automerge": true,
+      "automergeType": "branch",
       "groupName": "dev dependencies",
       "rangeStrategy": "bump"
     },
