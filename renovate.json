@@ -25,7 +25,8 @@
       "automerge": true,
       "automergeType": "branch",
       "groupName": "ampel packages",
-      "rangeStrategy": "bump"
+      "rangeStrategy": "bump",
+      "ignoreUnstable": false
     }
   ]
 }
