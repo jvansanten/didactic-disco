@@ -4,7 +4,7 @@
   ],
   "schedule": "every 1 month on Monday before 5am",
   "automerge": true,
-  "autoMergeType": "branch",
+  "automergeType": "branch",
   "lockFileMaintenance": {
     "enabled": true,
     "automergeType": "branch"
