@@ -3,6 +3,8 @@
     "config:base"
   ],
   "schedule": "every 1 month on Monday before 5am",
+  "automerge": true,
+  "autoMergeType": "branch",
   "lockFileMaintenance": {
     "enabled": true,
     "automergeType": "branch"
@@ -14,16 +16,12 @@
     },
     {
       "matchDepTypes": ["dev-dependencies"],
-      "automerge": true,
-      "automergeType": "branch",
       "groupName": "dev dependencies",
       "rangeStrategy": "bump"
     },
     {
       "matchPackagePatterns": ["^ampel-.*"],
       "schedule": null,
-      "automerge": true,
-      "automergeType": "branch",
       "groupName": "ampel packages",
       "rangeStrategy": "bump",
       "ignoreUnstable": false
