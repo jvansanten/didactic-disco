@@ -1,26 +1,32 @@
 {
   "extends": [
-    "config:base",
-    "group:allNonMajor"
+    "config:base"
   ],
-  "schedule": "every 1 month on Monday before 5am",
-  "automerge": true,
-  "automergeType": "branch",
+  "schedule": null,
   "lockFileMaintenance": {
     "enabled": true,
     "automergeType": "branch"
   },
   "packageRules": [
     {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
       "matchDepTypes": ["dev-dependencies"],
-      "groupName": "Development dependencies",
+      "automerge": true,
+      "automergeType": "branch",
+      "groupName": "dev dependencies",
       "rangeStrategy": "bump"
     },
     {
       "matchPackagePatterns": ["^ampel-.*"],
       "schedule": null,
-      "groupName": "Ampel packages",
-      "rangeStrategy": "replace"
+      "automerge": true,
+      "automergeType": "branch",
+      "groupName": "ampel packages",
+      "rangeStrategy": "bump",
+      "ignoreUnstable": false
     }
   ]
 }
