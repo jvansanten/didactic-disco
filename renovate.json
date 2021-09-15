@@ -14,14 +14,12 @@
     {
       "matchDepTypes": ["dev-dependencies"],
       "groupName": "Development dependencies",
-      "groupSlug": "dev",
       "rangeStrategy": "bump"
     },
     {
       "matchPackagePatterns": ["^ampel-.*"],
       "schedule": "at any time",
       "groupName": "Ampel packages",
-      "groupSlug": "ampel",
       "rangeStrategy": "replace"
     }
   ]
