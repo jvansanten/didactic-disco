@@ -2,7 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "schedule": "every 1 month on Monday before 5 AM",
+  "schedule": "every 1 month on Monday before 5am",
   "lockFileMaintenance": {
     "enabled": true,
     "automergeType": "branch"
