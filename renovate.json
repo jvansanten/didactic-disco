@@ -6,13 +6,16 @@
   "automerge": true,
   "automergeType": "branch",
   "lockFileMaintenance": {
-    "enabled": true,
-    "automergeType": "branch"
+    "enabled": true
   },
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "groupName": "minor updates"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     },
     {
       "matchDepTypes": ["dev-dependencies"],
