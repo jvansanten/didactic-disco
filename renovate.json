@@ -2,7 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "schedule": "on the first monday of the month before 5 AM",
+  "schedule": "every 1 month on Monday before 5 AM",
   "lockFileMaintenance": {
     "enabled": true,
     "automergeType": "branch"
@@ -21,7 +21,7 @@
     },
     {
       "matchPackagePatterns": ["^ampel-.*"],
-      "schedule": null,
+      "schedule": "at any time",
       "automerge": true,
       "automergeType": "branch",
       "groupName": "ampel",
