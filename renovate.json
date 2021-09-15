@@ -23,8 +23,7 @@
       "matchPackagePatterns": ["^ampel-.*"],
       "schedule": null,
       "groupName": "ampel packages",
-      "rangeStrategy": "bump",
-      "ignoreUnstable": false
+      "rangeStrategy": "bump"
     }
   ]
 }
