@@ -2,7 +2,7 @@
   "extends": [
     "config:base"
   ],
-  "schedule": null,
+  "schedule": "on the first monday of the month before 5 AM",
   "lockFileMaintenance": {
     "enabled": true,
     "automergeType": "branch"
@@ -24,9 +24,8 @@
       "schedule": null,
       "automerge": true,
       "automergeType": "branch",
-      "groupName": "ampel packages",
-      "rangeStrategy": "bump",
-      "ignoreUnstable": false
+      "groupName": "ampel",
+      "rangeStrategy": "replace"
     }
   ]
 }
