@@ -37,7 +37,7 @@ jobs:
               path: 'pyproject.toml',
               ref: ref
             });
-            return toml.parse(atob(response.data.content))
+            return toml.parse(Buffer.from(response.data.content, 'base64').toString())
               .tool
               .poetry
               .version;
