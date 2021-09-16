@@ -23,8 +23,9 @@ jobs:
       uses: actions/github-script@v3
       with:
         github-token: ${{ github.token }}
-        debug: true
-        script: "console.log({depth: context.payload.commits.length+1}); return context.payload.commits.length+1"
+        script: |
+          console.log(context.payload.commits)
+          return context.payload.commits.length+1
     - uses: actions/checkout@v2
       with:
         fetch-depth: ${{ steps.commits.outputs.result }}
