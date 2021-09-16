@@ -1,7 +1,7 @@
 name: taggert
 
 on:
-  push:
+  create:
     tags:
       - v*
 
