@@ -14,8 +14,7 @@ jobs:
   
   pypi:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && ( contains(github.ref, '/tags/v') || contains(github.ref, 'refs/heads/main') ) }}
-
+    if: ${{ github.event_name == 'push' && github.base_ref === undefined }}
 
     steps:
     - uses: actions/setup-node@v2
@@ -42,12 +41,9 @@ jobs:
               .poetry
               .version;
           }
-
           before = await getVersion(context.payload.before);
           after = await getVersion(context.payload.after);
-
           tag = `v${after}`
-
           return {
             tag,
             bumped: before !== after,
