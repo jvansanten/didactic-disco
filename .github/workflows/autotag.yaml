@@ -20,15 +20,7 @@ jobs:
         poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}'; }
         echo "::set-output name=previous::$(git show HEAD^:pyproject.toml | poetry_version)"
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
-    - name: Create tag
-      uses: actions/github-script@v3
+    - uses: actions-ecosystem/action-push-tag@v1
       if: ${{ steps.check.outputs.current != steps.check.outputs.previous }}
       with:
-        github-token: ${{ github.token }}
-        script: |
-          github.git.createRef({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: "refs/tags/v${{steps.check.outputs.current}}",
-            sha: context.sha
-          })
+        tag: v${{steps.check.outputs.current}}

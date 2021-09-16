@@ -1,12 +1,12 @@
 name: taggert
 
 on:
-  create:
+  push:
     tags:
       - v*
 
 jobs:
-  tag:
+  echo:
     runs-on: ubuntu-latest
 
     steps:
