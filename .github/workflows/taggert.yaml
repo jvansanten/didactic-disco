@@ -1,0 +1,14 @@
+name: taggert
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: hola
+      run: echo "hola! ${{ github.ref }}"
