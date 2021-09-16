@@ -25,18 +25,30 @@ jobs:
         github-token: ${{ github.token }}
         debug: true
         script: |
-          toml = require('toml')
           console.log(context.payload.commits);
           console.log(context);
-          response = await github.repos.getContent({
-            repo: context.repo.repo,
-            owner: context.repo.owner,
-            path: 'pyproject.toml',
-            ref: context.payload.before
-          })
-          console.log(response)
-          buf = new Buffer(response.data.content, 'base64')
-          console.log(toml.parse(buf.toString()))
+          function getVersion(ref) {
+            response = await github.repos.getContent({
+              repo: context.repo.repo,
+              owner: context.repo.owner,
+              path: 'pyproject.toml',
+              ref: ref
+            });
+            let header_found = false;
+            const lines = new Buffer(response.data.content, 'base64').split('\n');
+            for (const line of lines) {
+              if (!header_found && line == '[tool.poetry]') {
+                header_found = true;
+              } else if (header_found && line.startsWith('version = ')) {
+                return line.split('version = ')[-1].slice(1,-1);
+              }
+            }
+            return null;
+          }
+
+
+          console.log(content.payload.before, getVersion(content.payload.before));
+          
           return context.payload.commits.length+1
     - uses: actions/checkout@v2
       with:
