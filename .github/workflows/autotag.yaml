@@ -14,8 +14,11 @@ jobs:
     - name: Check for version bump
       id: bump
       run: |
-        poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}' }
+        poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}'; }
         previous=$(git show HEAD~1:pyproject.toml | poetry_version)
         current=$(git show HEAD:pyproject.toml | poetry_version)
         echo "::set-output name=previous::$(git show HEAD~1:pyproject.toml | poetry_version)"
         echo "::set-output name=current::$(git show HEAD~1:pyproject.toml | poetry_version)"
+    - name: Make tag
+      if: ${{ steps.bump.outputs.current != steps.bump.outputs.previous }}
+      run: echo "hola!"
