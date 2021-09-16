@@ -40,19 +40,15 @@ jobs:
               ref: ref
             });
             let header_found = false;
-            const lines = new Buffer(response.data.content, 'base64').split('\n');
-            for (const line of lines) {
-              if (!header_found && line == '[tool.poetry]') {
-                header_found = true;
-              } else if (header_found && line.startsWith('version = ')) {
-                return line.split('version = ')[-1].slice(1,-1);
-              }
-            }
+            console.log(response.data);
+            const pyproject = toml.parse(new Buffer(response.data.content, 'base64').toString());
+            console.log(pyproject);
             return null;
           }
 
+          before = await getVersion(content.payload.before);
 
-          console.log(content.payload.before, getVersion(content.payload.before));
+          console.log(content.payload.before, before);
 
           return context.payload.commits.length+1
     - uses: actions/checkout@v2
