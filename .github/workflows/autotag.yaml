@@ -21,17 +21,15 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: 14
-    - run: npm install toml
+    - run: npm install toml@3.0.0
     - name: Get commit range
-      id: commits
+      id: payload
       uses: actions/github-script@v4
       with:
         github-token: ${{ github.token }}
         debug: true
         script: |
           const toml = require('toml')
-          console.log(context.payload.commits);
-          console.log(context);
           async function getVersion(ref) {
             response = await github.repos.getContent({
               repo: context.repo.repo,
@@ -39,7 +37,7 @@ jobs:
               path: 'pyproject.toml',
               ref: ref
             });
-            return toml.parse(new Buffer(response.data.content, 'base64').toString())
+            return toml.parse(atob(response.data.content))
               .tool
               .poetry
               .version;
@@ -48,19 +46,15 @@ jobs:
           before = await getVersion(context.payload.before);
           after = await getVersion(context.payload.after);
 
-          console.log(before, after);
+          tag = `v${after}`
 
-          return context.payload.commits.length+1
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: ${{ steps.commits.outputs.result }}
-    # Check if one of commits in context bumped the version
-    - name: Check for version bump
-      id: check
-      run: |
-        echo Checking last $((${{ steps.commits.outputs.result }}-1)) commits
-        poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}'; }
-        echo "::set-output name=previous::$(git show HEAD~$((${{ steps.commits.outputs.result }}-1)):pyproject.toml | poetry_version)"
-        echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
+          return {
+            tag,
+            bumped: before !== after,
+            tagged: context.payload.ref === `refs/tags/${tag}`,
+            is_main: context.payload.ref === `refs/heads/${context.payload.repository.default_branch}`
+          }
     - name: Dump ref
-      run: echo ${{ steps.check.outputs.previous }}->${{ steps.check.outputs.current }}
+      run: echo ${{ steps.payload.outputs.result }}
+    - uses: actions/checkout@v2
+  
