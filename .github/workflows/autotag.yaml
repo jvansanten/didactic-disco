@@ -42,7 +42,7 @@ jobs:
                 .tool
                 .poetry
                 .version;
-            } except (exc) {
+            } catch (exc) {
               if (exc instanceof RequestError && exc.status == 404) {
                 return null;
               } else {
