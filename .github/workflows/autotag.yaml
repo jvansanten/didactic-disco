@@ -46,7 +46,7 @@ jobs:
             return null;
           }
 
-          before = await getVersion(content.payload.before);
+          before = await getVersion(context.payload.before);
 
           console.log(content.payload.before, before);
 
