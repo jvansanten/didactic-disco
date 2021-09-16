@@ -49,13 +49,12 @@ jobs:
 
           let release = context.payload.ref === ref;
           if (is_main && !release && before !== after) {
-            let response = await github.git.createRef({
+            await github.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref,
               sha: context.sha
             });
-            console.log(response);
             release = true;
           }
 
