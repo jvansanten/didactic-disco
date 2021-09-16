@@ -69,13 +69,13 @@ jobs:
               release = true;
             }
           }
-          return {release};
+          return release;
     - name: Dump ref
       run: echo ${{ steps.check.outputs.result }}
     - name: do not release
-      if: ${{ !fromJSON(steps.check.outputs.result).release }}
+      if: ${{ !fromJSON(steps.check.outputs.result) }}
       run: echo "did not release"
     - name: do release
-      if: ${{ fromJSON(steps.check.outputs.result).release }}
+      if: ${{ fromJSON(steps.check.outputs.result) }}
       run: echo "did release"
   
