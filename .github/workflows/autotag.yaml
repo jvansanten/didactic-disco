@@ -60,13 +60,22 @@ jobs:
           if (!release && is_main) {
             before = await getVersion(context.payload.before);
             if (before !== after) {
-              await github.git.createRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref,
-                sha: context.sha
-              });
-              release = true;
+              try {
+                await github.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref,
+                  sha: context.sha
+                });
+                release = true;
+              } catch (exc) {
+                // tag already existed
+                if (exc instanceof RequestError && exc.status == 422) {
+                  release = false;
+                } else {
+                  throw exc;
+                }
+              }
             }
           }
           return release;
