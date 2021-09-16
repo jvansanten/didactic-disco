@@ -24,12 +24,12 @@ jobs:
     - run: npm install toml
     - name: Get commit range
       id: commits
-      uses: actions/github-script@v3
+      uses: actions/github-script@v4
       with:
         github-token: ${{ github.token }}
         debug: true
         script: |
-          toml = require('toml')
+          const toml = require('toml')
           console.log(context.payload.commits);
           console.log(context);
           async function getVersion(ref) {
