@@ -25,15 +25,15 @@ jobs:
       with:
         github-token: ${{ github.token }}
         debug: true
-        script: "console.log({depth: context.payload.commits.length+1}); return {depth: context.payload.commits.length+1}"
+        script: "console.log({depth: context.payload.commits.length+1}); return context.payload.commits.length+1"
     - uses: actions/checkout@v2
       with:
-        fetch-depth: ${{ steps.commits.outputs.depth }}
+        fetch-depth: ${{ steps.commits.outputs.result }}
     # Check if the _last_ commit bumped the version
     - name: Check for version bump
       id: check
       run: |
-        echo Checking last ${{ steps.commits.outputs.depth }} commits
+        echo Checking last ${{ steps.commits.outputs.result-1 }} commits
         poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}'; }
         echo "::set-output name=previous::$(git show HEAD^:pyproject.toml | poetry_version)"
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
