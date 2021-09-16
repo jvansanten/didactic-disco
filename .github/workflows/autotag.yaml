@@ -31,34 +31,44 @@ jobs:
         script: |
           const toml = require('toml')
           async function getVersion(ref) {
-            response = await github.repos.getContent({
-              repo: context.repo.repo,
-              owner: context.repo.owner,
-              path: 'pyproject.toml',
-              ref: ref
-            });
-            return toml.parse(Buffer.from(response.data.content, 'base64').toString())
-              .tool
-              .poetry
-              .version;
+            try {
+              response = await github.repos.getContent({
+                repo: context.repo.repo,
+                owner: context.repo.owner,
+                path: 'pyproject.toml',
+                ref: ref
+              });
+              return toml.parse(Buffer.from(response.data.content, 'base64').toString())
+                .tool
+                .poetry
+                .version;
+            } except (exc) {
+              if (exc instanceof RequestError && exc.status == 404) {
+                return null;
+              } else {
+                throw exc;
+              }
+            }
           }
-          console.log(context.payload);
-          before = await getVersion(context.payload.before);
           after = await getVersion(context.payload.after);
           ref = `refs/tags/v${after}`
           is_main = context.payload.ref === `refs/heads/${context.payload.repository.default_branch}`
 
-          let release = context.payload.ref === ref;
-          if (is_main && !release && before !== after) {
-            await github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref,
-              sha: context.sha
-            });
-            release = true;
+          // a tag matching the version was just pushed
+          let release = context.payload.ref == ref;
+          // the version on the default branch changed; create a tag
+          if (!release && is_main) {
+            before = await getVersion(context.payload.before);
+            if (before !== after) {
+              await github.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref,
+                sha: context.sha
+              });
+              release = true;
+            }
           }
-
           return {release};
     - name: Dump ref
       run: echo ${{ steps.check.outputs.result }}
