@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' && ( contains(github.ref, '/tags/v') || contains(github.ref, 'refs/heads/main') ) }}
 
+
     steps:
     - name: Get commit range
       id: commits
@@ -36,4 +37,4 @@ jobs:
         echo "::set-output name=previous::$(git show HEAD~$((${{ steps.commits.outputs.result }}-1)):pyproject.toml | poetry_version)"
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
     - name: Dump ref
-      run: echo ${{github.ref}}
+      run: echo ${{ steps.check.outputs.previous }}->${{ steps.check.outputs.current }}
