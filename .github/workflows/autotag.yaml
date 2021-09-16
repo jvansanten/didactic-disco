@@ -25,6 +25,7 @@ jobs:
         github-token: ${{ github.token }}
         debug: true
         script: |
+          toml = require('toml')
           console.log(context.payload.commits);
           console.log(context);
           response = await github.repos.getContent({
@@ -34,6 +35,8 @@ jobs:
             ref: context.payload.before
           })
           console.log(response)
+          buf = new Buffer(response.data.content, 'base64')
+          console.log(toml.parse(buf.toString()))
           return context.payload.commits.length+1
     - uses: actions/checkout@v2
       with:
