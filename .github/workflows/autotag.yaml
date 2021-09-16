@@ -41,10 +41,12 @@ jobs:
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
     - name: Create tag
       uses: actions/github-script@v3
+      if: ${{ !contains(github.ref, '/tags/v') && (steps.check.outputs.current != steps.check.outputs.previous) }}
       with:
         github-token: ${{ github.token }}
         script: |
           console.log(context)
+          console.log(github.ref)
           if ('${{steps.check.outputs.current}}' != '${{steps.check.outputs.previous}}' && !contains(github.ref, '/tags/v')) {
             github.git.createRef({
               owner: context.repo.owner,
@@ -55,11 +57,13 @@ jobs:
           }
     - id: tag
       uses: dawidd6/action-get-tag@v1.0.0
+      if: ${{ contains(github.ref, '/tags/v') }}
     - name: Verify tag matches version
+      if: ${{ contains(github.ref, '/tags/v') }}
       run: |
         [ v${{steps.check.outputs.current}} = "${{steps.tag.outputs.tag}}" ] || (echo "tag does not match version: "${{steps.tag.outputs.tag}}" != version v${{steps.check.outputs.current}}" && false)
     - uses: actions/setup-python@v2
-      if: ${{ github.event_name == 'push' && (contains(github.ref, '/tags/v') || (steps.check.outputs.current != steps.check.outputs.previous) ) }}
+      if: ${{ contains(github.ref, '/tags/v') || (steps.check.outputs.current != steps.check.outputs.previous) }}
       with:
         python-version: 3.9
     # - name: Install dependencies
