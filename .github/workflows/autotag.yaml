@@ -44,6 +44,7 @@ jobs:
       with:
         github-token: ${{ github.token }}
         script: |
+          console.log(context)
           if (steps.check.outputs.current != steps.check.outputs.previous && !contains(github.ref, '/tags/v')) {
             github.git.createRef({
               owner: context.repo.owner,
