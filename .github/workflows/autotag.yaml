@@ -39,16 +39,16 @@ jobs:
               path: 'pyproject.toml',
               ref: ref
             });
-            let header_found = false;
-            console.log(response.data);
-            const pyproject = toml.parse(new Buffer(response.data.content, 'base64').toString());
-            console.log(pyproject);
-            return null;
+            return toml.parse(new Buffer(response.data.content, 'base64').toString())
+              .tool
+              .poetry
+              .version;
           }
 
           before = await getVersion(context.payload.before);
+          after = await getVersion(context.payload.after);
 
-          console.log(content.payload.before, before);
+          console.log(before, after);
 
           return context.payload.commits.length+1
     - uses: actions/checkout@v2
