@@ -65,4 +65,7 @@ jobs:
     - name: do not release
       if: ${{ !fromJSON(steps.check.outputs.result).release }}
       run: echo "did not release"
+    - name: do release
+      if: ${{ fromJSON(steps.check.outputs.result).release }}
+      run: echo "did release"
   
