@@ -22,8 +22,8 @@ jobs:
       with:
         node-version: 14
     - run: npm install toml@3.0.0
-    - name: Get commit range
-      id: payload
+    - name: Check for version bump
+      id: check
       uses: actions/github-script@v4
       with:
         github-token: ${{ github.token }}
@@ -45,23 +45,24 @@ jobs:
           before = await getVersion(context.payload.before);
           after = await getVersion(context.payload.after);
           ref = `refs/tags/v${after}`
+          is_main = context.payload.ref === `refs/heads/${context.payload.repository.default_branch}`
 
-          response = await github.git.getRef({
-            repo: context.repo.repo,
-            owner: context.repo.owner,
-            ref
-          });
-          console.log(response);
-
-          result = {
-            tag,
-            bumped: before !== after,
-            tagged: context.payload.ref === ref,
-            is_main: context.payload.ref === `refs/heads/${context.payload.repository.default_branch}`
+          let release = context.payload.ref === ref;
+          if (is_main && !tagged && before !== after) {
+            let response = await github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref,
+              sha: context.sha
+            });
+            console.log(response);
+            release = true;
           }
 
-          return result;
+          return {release};
     - name: Dump ref
-      run: echo ${{ steps.payload.outputs.result }}
-    - uses: actions/checkout@v2
+      run: echo ${{ steps.check.outputs.result }}
+    - name: do not release
+      if: ${{ !fromJSON(steps.check.outputs.result).release }}
+      run: echo "did not release"
   
