@@ -24,6 +24,7 @@ jobs:
       uses: actions/github-script@v3
       with:
         github-token: ${{ github.token }}
+        debug: true
         script: "return {depth: context.payload.commits.length}"
     - uses: actions/checkout@v2
       with:
