@@ -14,6 +14,7 @@ jobs:
   
   pypi:
     runs-on: ubuntu-latest
+    # run only on pushes, not PRs
     if: ${{ github.event_name == 'push' && github.base_ref == null }}
 
     steps:
@@ -43,13 +44,23 @@ jobs:
           }
           before = await getVersion(context.payload.before);
           after = await getVersion(context.payload.after);
-          tag = `v${after}`
-          return {
+          ref = `refs/tags/v${after}`
+
+          response = await github.git.getRef({
+            repo: context.repo.repo,
+            owner: context.repo.owner,
+            ref
+          });
+          console.log(response);
+
+          result = {
             tag,
             bumped: before !== after,
-            tagged: context.payload.ref === `refs/tags/${tag}`,
+            tagged: context.payload.ref === ref,
             is_main: context.payload.ref === `refs/heads/${context.payload.repository.default_branch}`
           }
+
+          return result;
     - name: Dump ref
       run: echo ${{ steps.payload.outputs.result }}
     - uses: actions/checkout@v2
