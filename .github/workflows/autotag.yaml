@@ -42,6 +42,7 @@ jobs:
               .poetry
               .version;
           }
+          console.log(context.payload);
           before = await getVersion(context.payload.before);
           after = await getVersion(context.payload.after);
           ref = `refs/tags/v${after}`
