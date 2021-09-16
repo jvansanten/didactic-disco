@@ -59,13 +59,13 @@ jobs:
           }
     - id: tag
       uses: dawidd6/action-get-tag@v1.0.0
-      if: ${{ always() && contains(github.ref, '/tags/v') }}
+      if: ${{ success() && contains(github.ref, '/tags/v') }}
     - name: Verify tag matches version
-      if: ${{ always() && contains(github.ref, '/tags/v') }}
+      if: ${{ success() && contains(github.ref, '/tags/v') }}
       run: |
         [ v${{steps.check.outputs.current}} = "${{steps.tag.outputs.tag}}" ] || (echo "tag does not match version: "${{steps.tag.outputs.tag}}" != version v${{steps.check.outputs.current}}" && false)
     - uses: actions/setup-python@v2
-      if: ${{ always() && (contains(github.ref, '/tags/v') || (steps.check.outputs.current != steps.check.outputs.previous)) }}
+      if: ${{ success() && (contains(github.ref, '/tags/v') || (steps.check.outputs.current != steps.check.outputs.previous)) }}
       with:
         python-version: 3.9
     - name: follow-on
