@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push' && ( contains(github.ref, '/tags/v') || contains(github.ref, 'refs/heads/main') ) }}
 
-
-
     steps:
     - name: Get commit range
       id: commits
@@ -29,13 +27,13 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: ${{ steps.commits.outputs.result }}
-    # Check if the _last_ commit bumped the version
+    # Check if one of commits in context bumped the version
     - name: Check for version bump
       id: check
       run: |
         echo Checking last $((${{ steps.commits.outputs.result }}-1)) commits
         poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}'; }
-        echo "::set-output name=previous::$(git show HEAD^:pyproject.toml | poetry_version)"
+        echo "::set-output name=previous::$(git show HEAD~$((${{ steps.commits.outputs.result }}-1)):pyproject.toml | poetry_version)"
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
     - name: Dump ref
       run: echo ${{github.ref}}
