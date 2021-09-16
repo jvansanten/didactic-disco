@@ -26,8 +26,6 @@ jobs:
       id: check
       uses: actions/github-script@v4
       with:
-        github-token: ${{ github.token }}
-        debug: true
         script: |
           const toml = require('toml')
           async function getVersion(ref) {
