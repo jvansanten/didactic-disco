@@ -28,7 +28,15 @@ jobs:
     needs: [test, mypy]
     if: ${{ github.event_name == 'push' && ( contains(github.ref, '/tags/v') || contains(github.ref, 'refs/heads/main') ) }}
 
+
+
     steps:
+    - name: Get commit range
+      uses: actions/github-script@v3
+      with:
+        github-token: ${{ github.token }}
+        script: 
+          console.log(github)
     - uses: actions/checkout@v2
       with:
         fetch-depth: 2
@@ -41,39 +49,3 @@ jobs:
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
     - name: Dump ref
       run: echo ${{github.ref}}
-    - name: Create tag
-      uses: actions/github-script@v3
-      if: ${{ !contains(github.ref, '/tags/v') && (steps.check.outputs.current != steps.check.outputs.previous) }}
-      with:
-        github-token: ${{ github.token }}
-        script: |
-          github.git.createRef({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            ref: "refs/tags/v${{steps.check.outputs.current}}",
-            sha: context.sha
-          })
-    - id: tag
-      uses: dawidd6/action-get-tag@v1.0.0
-      if: ${{ success() && contains(github.ref, '/tags/v') }}
-    - name: Verify tag matches version
-      if: ${{ success() && contains(github.ref, '/tags/v') }}
-      run: |
-        [ v${{steps.check.outputs.current}} = "${{steps.tag.outputs.tag}}" ] || (echo "tag does not match version: "${{steps.tag.outputs.tag}}" != version v${{steps.check.outputs.current}}" && false)
-    - uses: actions/setup-python@v2
-      if: ${{ success() && (contains(github.ref, '/tags/v') || (steps.check.outputs.current != steps.check.outputs.previous)) }}
-      with:
-        python-version: 3.9
-    - name: follow-on
-      run: echo "do i get skipped now?"
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade poetry
-    #     poetry install
-    
-    # - run: |
-    #     poetry config repositories.testpypi https://test.pypi.org/legacy/
-    #     poetry publish -n --build
-    #   env:
-    #     POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
-    #     POETRY_PYPI_TOKEN_TESTPYPI: ${{ secrets.PYPI_TEST_API_TOKEN }}
