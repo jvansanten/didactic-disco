@@ -24,7 +24,7 @@ jobs:
       with:
         github-token: ${{ github.token }}
         script: |
-          console.log(context.payload.commits)
+          console.log(context.payload.commits);
           return context.payload.commits.length+1
     - uses: actions/checkout@v2
       with:
