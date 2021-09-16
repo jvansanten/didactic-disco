@@ -18,6 +18,10 @@ jobs:
 
 
     steps:
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14
+    - run: npm install toml
     - name: Get commit range
       id: commits
       uses: actions/github-script@v3
@@ -25,9 +29,10 @@ jobs:
         github-token: ${{ github.token }}
         debug: true
         script: |
+          toml = require('toml')
           console.log(context.payload.commits);
           console.log(context);
-          function getVersion(ref) {
+          async function getVersion(ref) {
             response = await github.repos.getContent({
               repo: context.repo.repo,
               owner: context.repo.owner,
@@ -48,7 +53,7 @@ jobs:
 
 
           console.log(content.payload.before, getVersion(content.payload.before));
-          
+
           return context.payload.commits.length+1
     - uses: actions/checkout@v2
       with:
