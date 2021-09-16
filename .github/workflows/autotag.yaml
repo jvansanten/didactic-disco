@@ -33,7 +33,7 @@ jobs:
     - name: Check for version bump
       id: check
       run: |
-        echo Checking last ${{ fromJSON(steps.commits.outputs.result)-1 }} commits
+        echo Checking last $((${{ steps.commits.outputs.result }}-1)) commits
         poetry_version() { awk '/^\s*$/{f=0};f{if ($1=="version") {gsub(/"/, "", $3); print($3)}};/\[tool\.poetry\]/{f=1}'; }
         echo "::set-output name=previous::$(git show HEAD^:pyproject.toml | poetry_version)"
         echo "::set-output name=current::$(git show HEAD:pyproject.toml | poetry_version)"
