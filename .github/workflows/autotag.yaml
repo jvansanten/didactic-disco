@@ -12,18 +12,19 @@ on:
 
 jobs:
   
-  pypi:
+  check_version:
+    name: Check for version bump 
     runs-on: ubuntu-latest
     # run only on pushes, not PRs
     if: ${{ github.event_name == 'push' && github.base_ref == null }}
-
+    outputs:
+      should_publish: ${{ fromJSON(steps.check.outputs.result) }} 
     steps:
     - uses: actions/setup-node@v2
       with:
         node-version: 14
     - run: npm install toml@3.0.0
-    - name: Check for version bump
-      id: check
+    - id: check
       uses: actions/github-script@v4
       with:
         script: |
@@ -77,12 +78,18 @@ jobs:
             }
           }
           return release;
+
+  pypi:
+    runs-on: ubuntu-latest
+    needs: [check_version]
+
+    steps:
     - name: Dump ref
-      run: echo ${{ steps.check.outputs.result }}
+      run: echo ${{ needs.check_version.outputs.should_publish }}
     - name: do not release
-      if: ${{ !fromJSON(steps.check.outputs.result) }}
+      if: ${{ !needs.check_version.outputs.should_publish }}
       run: echo "did not release"
     - name: do release
-      if: ${{ fromJSON(steps.check.outputs.result) }}
+      if: ${{ needs.check_version.outputs.should_publish }}
       run: echo "did release"
   
