@@ -87,9 +87,9 @@ jobs:
     - name: Dump ref
       run: echo ${{ needs.check_version.outputs.should_publish }}
     - name: do not release
-      if: ${{ !needs.check_version.outputs.should_publish }}
+      if: ${{ !fromJSON(needs.check_version.outputs.should_publish) }}
       run: echo "did not release"
     - name: do release
-      if: ${{ needs.check_version.outputs.should_publish }}
+      if: ${{ fromJSON(needs.check_version.outputs.should_publish) }}
       run: echo "did release"
   
