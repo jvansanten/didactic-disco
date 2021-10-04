@@ -32,7 +32,7 @@ jobs:
           async function getVersion(ref) {
             console.log(github);
             try {
-              response = await github.repos.getContent({
+              response = await github.rest.actions.repos.getContent({
                 repo: context.repo.repo,
                 owner: context.repo.owner,
                 path: 'pyproject.toml',
