@@ -30,6 +30,7 @@ jobs:
         script: |
           const toml = require('toml')
           async function getVersion(ref) {
+            console.log(github);
             try {
               response = await github.repos.getContent({
                 repo: context.repo.repo,
