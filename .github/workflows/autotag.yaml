@@ -72,7 +72,7 @@ jobs:
                 });
                 console.log(`Tag v${after} created (${context.sha})`);
                 release = true;
-              } catch (exc) {
+              } /* catch (exc) {
                 // tag already existed
                 if (exc instanceof RequestError && exc.status == 422) {
                   console.log(`Skipping publish (tag v${after} already exists)`);
@@ -80,7 +80,7 @@ jobs:
                 } else {
                   throw exc;
                 }
-              }
+              } */
             } else {
               console.log(`Skipping publish (version is still ${before})`);
             }
