@@ -42,11 +42,12 @@ jobs:
                 .poetry
                 .version;
             } catch (exc) {
-              if (exc instanceof RequestError && exc.status == 404) {
+              /*if (exc instanceof RequestError && exc.status == 404) {
                 return null;
               } else {
                 throw exc;
-              }
+              }*/
+              throw exc;
             }
           }
           after = await getVersion(context.payload.after);
