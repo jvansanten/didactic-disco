@@ -30,7 +30,6 @@ jobs:
         script: |
           const toml = require('toml')
           async function getVersion(ref) {
-            console.log(github);
             try {
               response = await github.rest.repos.getContent({
                 repo: context.repo.repo,
@@ -43,12 +42,11 @@ jobs:
                 .poetry
                 .version;
             } catch (exc) {
-              /*if (exc instanceof RequestError && exc.status == 404) {
+              if (exc instanceof RequestError && exc.status == 404) {
                 return null;
               } else {
                 throw exc;
-              }*/
-              throw exc;
+              }
             }
           }
           after = await getVersion(context.payload.after);
