@@ -42,7 +42,7 @@ jobs:
                 .poetry
                 .version;
             } catch (exc) {
-              if (exc instanceof RequestError && exc.status == 404) {
+              if (exc.name == 'HttpError' && exc.status == 404) {
                 return null;
               } else {
                 throw exc;
@@ -75,7 +75,7 @@ jobs:
               } catch (exc) {
                 console.log(exc);
                 // tag already existed
-                if (exc instanceof RequestError && exc.status == 422) {
+                if (exc.name == 'HttpError' && exc.status == 422) {
                   console.log(`Skipping publish (tag v${after} already exists)`);
                   release = false;
                 } else {
