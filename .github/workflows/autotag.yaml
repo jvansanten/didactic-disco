@@ -29,6 +29,7 @@ jobs:
       with:
         script: |
           const toml = require('toml')
+          const { RequestError } = require('@octokit/request-error');
           async function getVersion(ref) {
             try {
               response = await github.rest.repos.getContent({
