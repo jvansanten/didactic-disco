@@ -8,7 +8,7 @@ packages = [{include = "disco"}]
 [tool.poetry.dependencies]
 python = "3.9"
 ampel-plots = {version = "^0.8.0-alpha.0", source = "pypi"}
-ampel-ztf = {version = "^0.8.0-alpha.2", source = "pypi"}
+ampel-ztf = {version = "^0.8.0-alpha.5", source = "pypi"}
 sncosmo = "^2.5.0"
 iminuit = "^2.8.0"
 numpy = "^1"
